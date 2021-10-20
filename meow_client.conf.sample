@@ -1,0 +1,13 @@
+[Server]
+Address=127.0.0.1
+Port=7200
+
+[Database]
+Address=127.0.0.1
+Port=3306
+User=db
+Password=db-sample-password
+Database=db
+
+[Connection]
+ComputingCenter=127.0.0.1:7100
