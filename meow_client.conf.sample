@@ -10,4 +10,5 @@ Password=db-sample-password
 Database=db
 
 [Connection]
+Tag=sample-tag
 ComputingCenter=127.0.0.1:7100

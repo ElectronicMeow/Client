@@ -9,6 +9,7 @@
 #include <QSettings>
 #include <QFile>
 #include <QFileInfo>
+#include <QNetworkAccessManager>
 #include "services/handler.h"
 #include "utils/crypto_utils.h"
 
@@ -50,6 +51,20 @@ HttpServer *initServer() {
     auto db_database = settings.value("Database", "db").toString();
 
     auto *db = new Database(db_address, db_port, db_user, db_password, db_database);
+
+    settings.endGroup();
+
+    settings.beginGroup("Connection");
+
+    auto ccAddress = settings.value("ComputingCenter").toString();
+    auto ccTag = settings.value("Tag").toString();
+    QNetworkAccessManager manager;
+    QNetworkRequest req;
+    req.setUrl(ccAddress + "/register");
+    req.setRawHeader("Authorization", "Bearer SAMPLE-TOKEN"); // TODO: changes it.
+    manager.post(req,
+                 QString(R"({"data":{"url":"%1", "tag":"%2"}})")
+                 .arg(address + ":" + QString::number(port), ccTag).toLocal8Bit());
 
     settings.endGroup();
 

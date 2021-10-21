@@ -29,12 +29,12 @@ HttpPromise MainHandler::handle(HttpDataPtr data) {
 
 HttpPromise MainHandler::handleDataRequest(HttpDataPtr data) {
     if (data->request->mimeType().compare("application/json", Qt::CaseInsensitive) != 0) {
-        qWarning("Incorrect data type in handleTransformToSamePk.");
+        qWarning("Incorrect data type in handleDataRequest.");
         throw HttpException(HttpStatus::BadRequest, "Request body content type must be application/json");
     }
     QJsonDocument jsonDocument = data->request->parseJsonBody();
     if (jsonDocument.isNull()) {
-        qWarning("Incorrect data format in handleTransformToSamePk.");
+        qWarning("Incorrect data format in handleDataRequest.");
         throw HttpException(HttpStatus::BadRequest, "Invalid JSON body");
     }
 
@@ -93,12 +93,12 @@ HttpPromise MainHandler::handleDataRequest(HttpDataPtr data) {
 
 HttpPromise MainHandler::handleSetResult(HttpDataPtr data) {
     if (data->request->mimeType().compare("application/json", Qt::CaseInsensitive) != 0) {
-        qWarning("Incorrect data type in handleTransformToSamePk.");
+        qWarning("Incorrect data type in handleSetResult.");
         throw HttpException(HttpStatus::BadRequest, "Request body content type must be application/json");
     }
     QJsonDocument jsonDocument = data->request->parseJsonBody();
     if (jsonDocument.isNull()) {
-        qWarning("Incorrect data format in handleTransformToSamePk.");
+        qWarning("Incorrect data format in handleSetResult.");
         throw HttpException(HttpStatus::BadRequest, "Invalid JSON body");
     }
 
@@ -122,43 +122,3 @@ HttpPromise MainHandler::handleSetResult(HttpDataPtr data) {
 void MainHandler::setDatabaseConnection(Database *conn) {
     this->conn_ = conn;
 }
-
-
-//HttpPromise MainHandler::handleTransformBack(HttpDataPtr data) {
-//    if (data->request->mimeType().compare("application/json", Qt::CaseInsensitive) != 0) {
-//        qWarning("Incorrect data type in handleTransformToSamePk.");
-//        throw HttpException(HttpStatus::BadRequest, "Request body content type must be application/json");
-//    }
-//    QJsonDocument jsonDocument = data->request->parseJsonBody();
-//    if (jsonDocument.isNull()) {
-//        qWarning("Incorrect data format in handleTransformToSamePk.");
-//        throw HttpException(HttpStatus::BadRequest, "Invalid JSON body");
-//    }
-//
-//    MeowCryptoUtils::EncryptedPair inp;
-//    inp.setPublicKey(this->prod_pk_);
-//    inp.setPublicN(this->publicParameters_.N());
-//    inp.setA(jsonDocument.object()["encrypted_pair_a"].toString());
-//    inp.setB(jsonDocument.object()["encrypted_pair_b"].toString());
-//
-//    QJsonArray ans;
-//
-//    for (auto &pk : this->pk_reverse_map_.keys()) {
-//        auto tag = this->pk_reverse_map_[pk];
-//        auto r = MeowCryptoUtils::masterTransform(this->publicParameters_, this->sk_, pk, inp);
-//
-//        QJsonArray record;
-//        record.append(tag); // tag
-//        record.append(r.A()); // encrypted pair A
-//        record.append(r.B()); // encrypted pair B
-//        ans.append(record);
-//    }
-//
-//    QJsonObject resp;
-//    resp["data"] = ans;
-//    resp["message"] = "ok";
-//
-//    data->response->setStatus(HttpStatus::Ok, QJsonDocument(resp));
-//
-//    return HttpPromise::resolve(data);
-//}
