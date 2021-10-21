@@ -62,25 +62,17 @@ HttpPromise MainHandler::handleDataRequest(HttpDataPtr data) {
         max_val = filters["max"].toInt();
     }
 
-    auto values = this->conn_->getValues(min_val, max_val);
+    auto value = this->conn_->getValuesAverage(min_val, max_val);
 
     MeowCryptoUtils::EncryptedPair res;
 
     QJsonObject ans;
     ans["public_key"] = this->keys_.publicKey();
-    QJsonArray enc_arr;
 
-    for (auto &i: values) {
-        res = MeowCryptoUtils::encrypt(param, this->keys_.publicKey(), i);
-        QJsonArray enc;
-        enc.append(res.A());
-        enc.append(res.B());
-        enc_arr.append(enc);
-        qInfo("Encrypted: %s -> %s#%s", i.toStdString().c_str(), res.A().toStdString().c_str(),
-              res.B().toStdString().c_str());
-    }
+    res = MeowCryptoUtils::encrypt(param, this->keys_.publicKey(), QString::number(value));
 
-    ans["encrypted"] = enc_arr;
+    ans["encrypted_pair_a"] = res.A();
+    ans["encrypted_pair_b"] = res.B();
 
     QJsonObject resp;
     resp["message"] = "ok";

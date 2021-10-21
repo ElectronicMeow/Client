@@ -22,7 +22,7 @@ public:
     Database(const QString &address, int port, const QString &user, const QString &password, const QString &database);
 
     /// default to all values.
-    QStringList getValues(int min_val = -1, int max_val = -1);
+    int getValuesAverage(int min_val = -1, int max_val = -1);
 };
 
 

@@ -24,12 +24,14 @@ Database::Database(const QString &address, int port, const QString &user, const 
     }
 }
 
-QStringList Database::getValues(int min_val, int max_val) {
+int Database::getValuesAverage(int min_val, int max_val) {
     QSqlQuery query;
     query.exec(this->query_sql_.arg(min_val).arg(max_val));
-    QStringList res{};
+    long long res = 0;
+    int size = 0;
     while (query.next()) {
-        res.append(QString::number(query.value(1).toInt()));
+        res += query.value(1).toInt();
+        size ++;
     }
-    return res;
+    return int(res / size);
 }
